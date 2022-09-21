@@ -1,0 +1,70 @@
+<section class="section">
+  <div class="container">
+    <h1 class="heading mb-4">New Game</h1>
+    <%if @game.errors.any?%>
+    	<h2 class="error-400 heading-xs">Something went wrong:</h2>
+      <ul>
+        <%@game.errors.full_messages.each do |message|%>
+          <li><%=message%></li>
+        <%end%>
+       </ul> 
+    <%end%>
+    <%=render "form", game: @game%>
+
+    <%=link_to "Back", games_path, class: "button-back"%>
+  </div>
+</section>
+
+<script>
+  function select_category() {
+    const category = document.querySelector("#game_category");
+    const parent = document.querySelector("#game_parent_id");
+    const summary = document.querySelector("#game_summary");
+
+    if (category.value === "main_game") {
+      parent.disabled = true;
+    }
+    if (category) {
+      category.addEventListener("change", () => {
+        if (category.value === "expansion") {
+          parent.disabled = false;
+        }
+        if (category.value === "main_game") {
+          parent.disabled = true;
+          parent.value = ""
+        }
+      })
+    }
+
+    summary.addEventListener("keyup", e => {
+      summary.style.height = "auto"
+      let scHeight = e.target.scrollHeight;
+      summary.style.height = `${scHeight}px`
+      })
+  }
+  select_category();
+
+  function script_edit() {
+    const imagen = document.getElementById('game_cover');
+    imagen.addEventListener("change", function() {
+      const lastInput = document.querySelector('.last-input');
+      const exist_image = document.querySelector(".game-card__image")
+      if (exist_image) {
+        exist_image.remove();
+      }
+      const show_imagen = document.createElement("img");
+      show_imagen.classList.add("game-card__image", "contain");
+      const read = new FileReader();
+      const file = this.files;
+      
+      read.onload = function(){
+        const result = this.result;
+        const url = result;
+        show_imagen.src = url;
+        lastInput.appendChild(show_imagen)
+      }
+      read.readAsDataURL(file[0]);
+    })
+  }
+  script_edit();
+</script>

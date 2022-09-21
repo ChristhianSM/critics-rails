@@ -1,0 +1,33 @@
+<div data-turbo = "false">
+  <%= form_with(model: [criticable, critic]) do |form| %>
+    <% if critic.errors.any? %>
+      <div style="color: red">
+        <h2><%= pluralize(critic.errors.count, "error") %> prohibited this critic from being saved:</h2>
+
+        <ul>
+          <% critic.errors.each do |error| %>
+            <li><%= error.full_message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="input mb-4">
+      <%= form.label :title, class: "content-xs overline" %>
+      <div class="input__container">
+          <%=form.text_field :title, placeholder: 'Critic title', class: "input__content"%>
+        </div>
+    </div>
+
+    <div class="input mb-4">
+      <%= form.label :body, class: "content-xs overline" %>
+      <div class="input__container">
+          <%=form.text_area :body, placeholder: 'Critic body...', class: "input__content"%>
+        </div>
+    </div>
+
+    <div class= "mb-4">
+      <%= form.submit class: "button button--secondary width-full" %>
+    </div>
+  <% end %>
+</div>

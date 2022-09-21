@@ -1,0 +1,138 @@
+<section class="section">
+  <div class="container">
+
+    <%if @game.cover.attached?%>
+      <%=image_tag @game.cover, class: "game-card__image m-auto border-radius"%>
+    <%end%>
+
+    <div class="game-card__content mt-1">
+      <div class = "flex space_between" >
+        <p class="content-lg mb-1 gray-400"><%= @game.name%></p>
+        <p class="content-regular game-rating"><%= @game.rating.round(1)%></p>
+      </div>
+      <%if @game.release_date?%>
+        <p class="mb-4 content-xs gray-300"><%= @game.release_date.year%></p>
+      <%end%>
+    </div>
+    <div class = "flex space_evenly mb-4">
+      <div class = "window-open">
+        <%= link_to  "Games Details", game_path(@game), class: "black" %>
+      </div>
+      <div class = "window">
+        <%= link_to  "Critics (#{@game.critics.where("approve=?",true).count})", game_critics_path(@game), class: "black" %>
+      </div>
+    </div>
+
+    <p class = "text-center mb-4"><%= @game.summary%></p>
+
+    <div class = "">
+      <p class = "mb-1">Genres: </p>
+      <div class = "flex mb-4 gap-2 wrap">
+        
+        <% if @game.genres.length.zero? %>
+          <p> - There are not genres to show </p>
+        <% else %>
+          <% @game.genres.each do |genre| %>
+            <div class = "options flex white">
+              <p><%= genre.name %></p>
+
+              <% if user_signed_in? && current_user.role == "admin"%>
+                <%=link_to image_tag("Icon.svg"), genre_path(game: @game, genre: genre.id), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }%>
+              <% end %>
+            </div>
+          <% end %>
+        <% end %>
+        
+      </div>
+
+      <p class = "mb-1">Platforms: </p>
+      <div class = "flex mb-4 gap-2 wrap">
+        <% if @game.platforms.length.zero? %>
+          <p> - There are not Platforms to show </p>
+        <% else %>
+          <% @game.platforms.each do |platform| %>
+            <div class = "options flex white">
+              <p><%= platform.name %></p>
+              <% if user_signed_in? && current_user.role == "admin"%>
+                <%=link_to image_tag("Icon.svg"), platform_path(game: @game, platform: platform.id), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }%>
+              <% end %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+
+      <p class = "mb-1">Developers: </p>
+      <div class = "flex mb-4 gap-2 wrap">
+       <% InvolvedCompany.where("game_id =?", @game.id).each do |company| %>
+          <% if company.developer %>
+          <div class = "options flex white">
+            <p><%= company.company.name %></p>
+            <% if user_signed_in? && current_user.role == "admin"%>
+              <%=link_to image_tag("Icon.svg"), destroy_involved_company_path(company_id: company.company_id, game_id: @game.id, developer: true)%>
+            <% end %>
+          </div>
+          <% end %>
+            
+        <% end %>
+      </div>
+
+      <p class = "mb-1">Publishers: </p>
+      <div class = "flex mb-4 gap-2 wrap">
+       <% InvolvedCompany.where("game_id =?", @game.id).each do |company| %>
+          <% if company.publisher %>
+          <div class = "options flex white">
+            <p><%= company.company.name %></p>
+            <% if user_signed_in? && current_user.role == "admin"%>
+              <%=link_to image_tag("Icon.svg"), destroy_involved_company_path(company_id: company.company_id, game_id: @game.id, publisher: true)%>
+            <% end %>
+          </div>
+          <% end %>
+        <% end %>
+      </div>
+
+      <% if user_signed_in? && current_user.role == "admin"%>
+        <h3 class = "heading-xs regular mb-2">Add Relations</h3>
+        <%=form_with url: genres_path(game_id: @game.id), class: "flex flex-column gap-4 mb-4" do |f|%>
+          <div class="flex gap-4 space_between">
+            <%= f.collection_select :genres, Genre.all - @game.genres, :id, :name, { include_blank: "Select Genre"}, {class: "select-collection"}%>
+            <%=f.submit "ADD GENRE", class: "button button--secondary"%>
+          </div> 
+        <% end %>
+        <%=form_with url: platforms_path(game_id: @game.id), class: "flex flex-column gap-4 mb-4" do |f|%>
+          <div class="flex gap-4 space_between">
+            <%= f.collection_select :platforms, Platform.all - @game.platforms, :id, :name, { include_blank: "Select Plaftorm"}, {class: "select-collection"}%>
+            <%=f.submit "ADD Platform", class: "button button--secondary"%>
+          </div> 
+        <% end %>
+        <%=form_with url: create_involved_company_path(game_id: @game.id, developer: true), class: "flex flex-column gap-4 mb-4" do |f|%>
+          <div class="flex gap-4 space_between">
+            <% 
+              involved_companies = @game.involved_companies.where(developer: true)
+              companies = involved_companies.map do |involve_company|
+                              involve_company.company
+                          end
+              companies_to_show = Company.all - companies
+            %>
+            <%= f.collection_select :company, companies_to_show, :id, :name, { include_blank: "Select Developer"}, {class: "select-collection"}%>
+            <%=f.submit "ADD Developer", class: "button button--secondary"%>
+          </div> 
+        <% end %>
+        <%=form_with url: create_involved_company_path(game_id: @game.id, publisher: true), class: "flex flex-column gap-4 mb-4" do |f|%>
+          <div class="flex gap-4 space_between">
+            <% 
+              involved_companies = @game.involved_companies.where(publisher: true)
+              companies = involved_companies.map do |involve_company|
+                              involve_company.company
+                          end
+              companies_to_show = Company.all - companies
+            %>
+            <%= f.collection_select :company, companies_to_show, :id, :name, { include_blank: "Select Publisher"}, {class: "select-collection"}%>
+            <%=f.submit "ADD Publisher", class: "button button--secondary"%>
+          </div> 
+        <% end %>
+      <% end %>
+
+      <%= link_to  "Back", root_path, class: "button-back"%>
+    </div>
+  </div>
+</section>

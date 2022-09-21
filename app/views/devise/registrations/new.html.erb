@@ -1,0 +1,64 @@
+<section class="section">
+  <div class="container">
+    <h2 class="text-center">Create an account</h2>
+
+    <div class="form flex flex-column p-1 mt-2">
+      <div class="form__socials mb-2">
+        <h3 class="content-lg text-center mb-4">Continue with</h3>
+        <div class="flex gap-4 justify-center">
+          <button type="button" class="button bg-secondary-300 white">Github</button>
+          <button type="button" class="button bg-secondary-300 white">Twitter</button>
+        </div>
+        <h3 class="content-lg text-center mt-2 mb-4">Or</h3>
+      </div>
+
+      <div data-turbo = "false">
+        <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+            <%= render "devise/shared/error_messages", resource: resource %>
+          <div class="field mb-2">
+            <%= f.label :username, class: "content-xs overline" %><br />
+            <div class="input__container">
+              <%=f.text_field :username, placeholder: "example", autofocus: true, class: "input__content"%>
+            </div>
+          </div>
+
+          <div class="field mb-2">
+            <%= f.label :email, class: "content-xs overline" %><br />
+            <div class="input__container">
+              <%=f.email_field :email, placeholder: "example@mail.com", autofocus: true, autocomplete: "email", class: "input__content"%>
+            </div>
+          </div>
+
+          <div class="field mb-2">
+            <%= f.label :password, class: "content-xs overline" %>
+            <% if @minimum_password_length %>
+            <em class="content-xs overline">(<%= @minimum_password_length %> characters minimum)</em>
+            <% end %><br />
+            <div class="input__container">
+              <%= f.password_field :password, placeholder: "********", autocomplete: "new-password", class: "input__content"%>
+            </div>
+          </div>
+
+          <div class="field mb-2">
+            <%= f.label :password_confirmation, class: "content-xs overline" %><br />
+            <div class="input__container mb-4">
+              <%= f.password_field :password_confirmation, placeholder: "********", autocomplete: "new-password", class: "input__content"%>
+            </div>
+          </div>
+
+          <div class="actions mb-4">
+            <%= f.submit "Sign Up", class: "button button--secondary w-full" %>
+          </div>
+        <% end %>
+      </div>
+
+      <div class = "text-center"> 
+        <p class = "mb-2"> Already a member? </p>
+        <%- if controller_name != 'sessions' %>
+          <%= link_to "Sign In", new_session_path(resource_name) %><br />
+        <% end %>
+      </div>
+
+    </div>
+  </div>
+</section>

@@ -1,0 +1,35 @@
+<div class="game-card gap-4 bg-white">
+    <%if game.cover.attached?%>
+        <%=image_tag game.cover, class: "game-card__image"%>
+    <%end%>
+    
+  <div class="game-card__content">
+    <div class = "flex space_between" >
+      <%=link_to game.name, game_path(game), class: "content-lg gray-400"%>
+      <%unless game.rating.nil?%>
+        <p class="content-regular game-rating"><%= game.rating.round(1)%></p>
+      <%end%>
+    </div>
+    <%if game.release_date?%>
+      <p class="mb-4 content-xs gray-300"><%= game.release_date.year%></p>
+    <%end%>
+
+    <p class="mb-1 content-xs gray-400">
+      <%= game.summary.length > 100 ? game.summary.slice(0,200).concat("...") : game.summary%>
+    </p>
+    <div class="game-card__footer"> 
+      <%# <p class="content-sm gray-300"><%=game.critics_count.to_s.concat(" critics")%>
+      <p class="content-xs gray-300"><%= "#{game.critics.count} critics"%></p>
+
+      <% if user_signed_in? && current_user.role == "admin"%>
+        <div class = "flex gap-4">
+          <%=link_to image_tag("edit.png"), edit_game_path(game)%>
+          <%=link_to image_tag("delete.png"), game_path(game), data: { turbo_method: :delete, 
+                                                            turbo_confirm: "Are you sure?" }%>
+        </div>
+      <% end %>
+      
+    </div>
+    </div>
+
+  </div>

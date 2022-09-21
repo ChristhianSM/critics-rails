@@ -1,0 +1,42 @@
+<%=form_with model: company, class: "flex flex-column gap-4 mb-4" do |f|%>
+  <div class="input">
+    <%=f.label :name, class: "content-xs overline"%>
+    <div class="input__container <%= !company.errors.messages[:name].length.zero? && 'border-error'%>">
+      <%=f.text_field :name, placeholder: 'Company SA', class: "input__content"%>
+    </div>        
+  </div>
+
+  <div class="input">
+    <%=f.label :description, class: "content-xs overline"%>
+    <div class="input__container">
+      <%=f.text_area :description, placeholder: 'About the company', class: "input__content"%>
+    </div>
+  </div>
+  
+    <div class="input">
+    <%=f.label :start_date, class: "content-xs overline"%>
+    <div class="input__container">
+      <%=f.text_field :start_date, placeholder: 'dd/mm/yyyy', class: "input__content"%>
+    </div>
+  </div>
+
+    <div class="input last-input">
+    <%=f.label :country, class: "content-xs overline"%>
+    <div class="input__container">
+      <%=f.text_field :country, placeholder: 'Somewhere', class: "input__content"%>
+    </div>
+  </div>
+
+  <div>
+    <%=f.label :cover, class: "content-xs overline"%>
+      <div>
+        <% if @image %>
+          <%=image_tag company.cover, class: "company-card__image contain"%>
+        <% end %>
+        <%=f.file_field :cover, accept: "image/png, image/jpeg"%>   
+      </div>
+
+  </div>
+
+  <%=f.submit class: "button button--secondary"%>
+<%end%>

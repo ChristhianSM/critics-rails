@@ -1,0 +1,30 @@
+<section class="section">
+  <div class="container">
+    <h2 class = "text-center">Change your password</h2>
+
+    <div class="form flex flex-column p-1 mt-2">
+      <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
+        <%= render "devise/shared/error_messages", resource: resource %>
+        <%= f.hidden_field :reset_password_token %>
+
+        <div class="field mb-2">
+          <%= f.label :password, "Password", class: "content-xs overline" %><br />
+          <div class="input__container">
+            <%= f.password_field :password, autofocus: true, autocomplete: "new-password", placeholder: "******", class: "input__content" %>
+          </div>
+        </div>
+
+        <div class="field mb-4">
+          <%= f.label :password_confirmation, "password Confirmation ", class: "content-xs overline" %><br />
+          <div class="input__container">
+            <%= f.password_field :password_confirmation, placeholder: "******", autocomplete: "new-password", class: "input__content" %>
+          </div>
+        </div>
+
+        <div class="actions">
+          <%= f.submit "Change my password", class: "button button--secondary w-full" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</section>

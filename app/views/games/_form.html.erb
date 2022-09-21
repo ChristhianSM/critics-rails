@@ -1,0 +1,55 @@
+<%=form_with model: game, class: "flex flex-column gap-4 mb-4" do |f|%>
+      <div class="input">
+        <%=f.label :name, class: "content-xs overline"%>
+        <div class="input__container <%= !game.errors.messages[:name].length.zero? && 'border-error'%>">
+          <%=f.text_field :name, placeholder: 'New game', class: "input__content"%>
+        </div>
+      </div>
+
+      <div class="input">
+        <%=f.label :summary, class: "content-xs overline"%>
+        <div class="input__container <%= !game.errors.messages[:summary].length.zero? && 'border-error'%>">
+          <%=f.text_area :summary, placeholder: 'New summary', class: "input__content text-area"%>
+        </div>
+      </div>
+      
+       <div class="input">
+        <%=f.label :release_date, class: "content-xs overline"%>
+        <div class="input__container">
+          <%=f.text_field :release_date, placeholder: 'dd/mm/yyyy', class: "input__content"%>
+        </div>
+      </div>
+
+       <div class="input">
+        <%=f.label :rating, class: "content-xs overline"%>
+        <div class="input__container <%= !game.errors.messages[:rating].length.zero? && 'border-error'%>">
+          <%=f.number_field :rating, placeholder: '0.0', class: "input__content"%>
+        </div>
+      </div>
+
+      <div class="select">
+        <%=f.label :category, class: "content-xs overline"%>
+        <%= f.collection_select :category, Game.categories, :first, :first, {}, class: "width-full input__container #{!game.errors.messages[:category].length.zero? && 'border-error'}" %>
+      </div>
+
+      <div class="select last-input">
+        <%=f.label :parent_id, class: "content-xs overline"%>
+        <%= f.collection_select :parent_id, Game.all, :id, :name, { include_blank: "No Parent" }, class: "width-full input__container #{!game.errors.messages[:parent_id].length.zero? && 'border-error'}" %>
+      </div> 
+
+      
+      <% if @show_image %>
+        <%=image_tag game.cover, class: "game-card__image contain"%>
+      <% end %>
+      
+      <div>
+        <%=f.label :cover, class: "content-xs overline"%>
+          <div>
+        
+          <%=f.file_field :cover, accept: "image/png, image/jpeg"%>   
+          </div>
+
+      </div>
+
+      <%=f.submit class: "button button--secondary"%>
+    <%end%>

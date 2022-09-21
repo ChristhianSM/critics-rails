@@ -1,0 +1,47 @@
+<section class="section">
+  <div class="container">
+    <h1 class="heading mb-4">Companies</h1>
+    
+    <% if user_signed_in? && current_user.role == "admin"%>
+      <%=link_to "New company", new_company_path, class: "button button--secondary button--sm mb-4 fit-content"%>
+    <% end %>
+    
+    <div class="card-list">
+      <%@companies.each do |company|%>
+        <div class="company-card gap-4 bg-white">
+          <%if company.cover.attached?%>
+              <%=image_tag company.cover, class: "company-card__image"%>
+          <%end%>
+         
+        <div class="company-card__content">
+          <div class = "flex space_between" >
+            <%=link_to company.name, company_path(company), class: "content-lg mb-1 gray-400"%>
+          </div>
+          <%unless company.start_date.nil?%>
+            <p class="mb-4 content-xs gray-300"><%= "#{company.start_date.year} - #{company.country}"%></p>
+          <%end%>
+          
+          
+          <% if company.description.nil? %>
+            <p class="content-xs gray-400 mb-4"> No description to show.... </p>
+          <% else %>
+            <p class="content-xs gray-400 mb-4">
+              <%= company.description.length > 100 ? company.description.slice(0,200).concat("...") : company.description%>
+            </p>
+          <% end %>
+          
+          <div class="company-card__footer"> 
+            <p class="mb-1 content-xs gray-300"><%= company.games.count.to_s.concat(" games")%></p>
+            <% if user_signed_in? && current_user.role == "admin"%>
+              <div class = "flex gap-4">
+              <%=link_to image_tag("edit.png"), edit_company_path(company)%>
+              <%=link_to image_tag("delete.png"), company_path(company), data: { turbo_method: :delete, 
+                                                                turbo_confirm: "Are you sure?" }%>
+              </div>
+            <% end %>
+          </div>
+         </div>
+        </div>
+      <%end%>
+  </div>
+</section>

@@ -1,0 +1,15 @@
+<section class="section">
+  <div class="container">
+    <h1 class="heading mb-4">Games</h1>
+    
+    <% if user_signed_in? && current_user.role == "admin"%>
+      <%=link_to "New game", new_game_path, class: "button button--secondary button--sm mb-4 fit-content"%>
+      
+    <% end %>
+    
+    <div class="card-list">
+      <%@games.each do |game|%>
+        <%= render "card_game", game: game %>
+      <%end%>
+    </div>
+</section>

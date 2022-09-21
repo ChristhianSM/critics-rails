@@ -1,0 +1,36 @@
+<section class="section">
+  <div class="container">
+    <h1 class="heading mb-4">Edit Company</h1>
+    <%if @company.errors.any?%>
+    	<h2 class="error-400 heading-xs">Something went wrong:</h2>
+      <ul>
+        <%@company.errors.full_messages.each do |message|%>
+          <li><%=message%></li>
+        <%end%>
+       </ul> 
+    <%end%>
+    
+    <%=render "form", company: @company%>
+
+    <%=link_to "Back", companies_path, class: "button-back"%>
+  </div>
+</section>
+
+<script>
+  function script_edit() {
+    const imagen = document.getElementById('company_cover');
+    imagen.addEventListener("change", function() {
+      const show_imagen = document.querySelector(".company-card__image");
+      const read = new FileReader();
+      const file = this.files;
+      
+      read.onload = function(){
+        const result = this.result;
+        const url = result;
+        show_imagen.src = url;
+      }
+      read.readAsDataURL(file[0]);
+    })
+  }
+  script_edit();
+</script>

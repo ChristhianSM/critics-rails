@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CriticsRc</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class = "bg-gray-100">
+    <header class="header section pb-0 bg-gray-100 container">
+      <div class="navbar">
+        <%= link_to root_path do %>
+          <%=image_tag "logo", class: "logo"%>
+        <% end %>
+        <%=image_tag "bars", class: "navbar__menu-icon bars cursor"%>
+      </div>
+      <nav class="navbar">
+        <ul class="navbar-links">
+          <li class="link gray-300">
+            
+            <% if current_user %>
+              Welcome <%= current_user.username%>
+            <% end %>
+            
+          </li>
+          <% if user_signed_in? %>
+              <%= link_to "Edit Profile", edit_user_registration_path, class: "link primary-500" %>
+          <% end %>
+          <%= link_to"Games", root_path, class: "link primary-500" %>
+          <%# <li class="link primary-500">Games</li> %>
+          <%= link_to"Companies", companies_path, class: "link primary-500" %>
+          <%# <li class="link primary-500">Companies</li> %>
+          
+          <% if user_signed_in? %>
+            <li class="button button--subtle">
+              <%= link_to  "Logout", destroy_user_session_path, data: { turbo_method: :delete} %>
+            </li>
+          <% else %>
+            <li class="button button--subtle">
+              <%= link_to  "Sign In", new_user_session_path %>
+            </li>
+            <li class="button button--subtle">
+              <%= link_to  "Sign up", new_user_registration_path %>
+            </li>
+          <% end %>
+          
+        </ul>
+      </nav>
+    </header>
+
+    <% if flash[:notice] %>
+      <div class = "notice notification"> 
+        <p><%= flash[:notice]%></p>
+        <%=image_tag "check",  width: 20, height: 20%>
+      </div>
+    <% end %>
+    
+    <% if flash[:alert] == "You need to sign in or sign up before continuing." %>
+      <div class = "alert-sign notification p-2"> 
+        <p>Sign in to start criting games and companies</p>
+        <div class = "flex gap-2 mt-1">
+          <%= link_to  "Sign In", new_user_session_path, class: "button button--secondary" %>
+          <%= link_to  "Sign up", new_user_registration_path, class: "button button--secondary" %>
+        </div>
+      </div>
+    <% elsif flash[:alert] %>
+      <div class = "alert notification"> 
+        <p><%= flash[:alert]%></p>
+        <%=image_tag "warning",  width: 20, height: 20%>
+      </div>
+    <% end %>
+
+    <%= yield %>
+    <footer class="footer">
+      <div class="footer footer__content">
+        <p class = "mb-2">© 2022 - Codeable Critics</p>
+        <p class = "mb-4">Build with ♥ by</p>
+        <div class="footer--names">
+          <div class="footer__member-tag">
+            <%=image_tag "link",  width: 20, height: 20%>
+            <p> Alejandro La Rosa</p>
+          </div>
+           <div class="footer__member-tag">
+            <%=image_tag "link",  width: 20, height: 20%>
+            <p> Christhian Silupú </p>
+          </div>
+           <div class="footer__member-tag">
+            <%=image_tag "link",  width: 20, height: 20%>
+            <p> Cielo Farromeque </p>
+          </div>
+          <div class="footer__member-tag">
+            <%=image_tag "link",  width: 20, height: 20%>
+            <p> Jorge Solis </p>
+          </div>
+          <div class="footer__member-tag">
+            <%=image_tag "link",  width: 20, height: 20%>
+            <p> Mario Zuñiga </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <script>
+    function inicial(){
+      let toggleBtn = document.querySelector('.bars');
+      let navbar = document.querySelector('nav');
+
+      navbar.style.transition = "all 0.5s ease-in-out";
+      navbar.style.animation = "mymove 0.5s 2";
+
+      toggleBtn.addEventListener('click', function() {
+        navbar.classList.toggle('navbar--open');
+      })
+
+      notice = document.querySelector(".notice")
+      if (notice) {
+        setTimeout(() => {
+          document.querySelector(".notice").remove()
+        }, 3000);
+      }
+    }
+    inicial();
+    </script>
+  </body>
+</html>
+<%# rails g devise:views %>

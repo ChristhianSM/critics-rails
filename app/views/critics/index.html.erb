@@ -1,0 +1,115 @@
+<section class="section">
+  <div class="container">
+
+  <% if @flag == "game" %>
+    <%if @game.cover.attached?%>
+      <%=image_tag @game.cover, class: "game-card__image"%>
+    <%end%>
+
+    <div class="game-card__content">
+      <div class = "flex space_between" >
+        <p class="content-lg mb-1 gray-400"><%= @game.name%></p>
+        <p class="content-regular game-rating"><%= @game.rating.round(1)%></p>
+      </div>
+      <p class="mb-4 content-xs gray-300"><%= @game.release_date.year%></p>
+    </div>
+    <div class = "flex space_evenly mb-4">
+      <div class = "window">
+        <%= link_to  "Games Details", game_path(@game), class: "black" %>
+      </div>
+      <div class = "window-open">
+        <%= link_to  "Critics (#{@game.critics.where("approve=?",true).count})", game_critics_path(@game), class: "black" %>
+      </div>
+    </div>
+    <%= render "form", {critic: @critic, criticable: @game}%>
+    <div class = "card-list">
+      
+      <% if user_signed_in? %>
+        <% @critics.each do |critic| %>
+          <%= render "critic_card", critic: critic, model: @game, flag: @flag%>
+        <%end%>
+      <% else %>
+        <% @critics.each do |critic| %>
+          <% if critic.approve %>
+            <div class="critic-card">
+              <h2 class=""><%= critic.title %></h2>
+              <p class="gray-300 mb-2"> <%= critic.user.username%> </p>
+              <p><%= critic.body %></p>
+              <div class="critic-destroy ">
+                <p class="gray-300 content-sm">Send <%=time_ago_in_words(critic.created_at)%></p>
+                <div class= "flex gap-4 items-center">
+                  <% if user_signed_in? %>
+                    <% if current_user.username == critic.user.username || current_user.role == "admin"%>´
+                      <%=link_to image_tag("edit.png"), edit_company_path(company)%>
+                      <%=link_to image_tag("delete.png"), critic_path(critic), data: { turbo_method: :delete, 
+                                                                            turbo_confirm: "Are you sure?" }%>
+                    <% end %>
+                  <% end %>
+                </div>
+              </div>
+              <div>
+            </div>
+          <% end %>
+        <% end %>
+      <% end %>
+      
+    </div>
+    <%= link_to  "Back", root_path, class: "button-back"%>
+
+  <% else %>
+    <%if @company.cover.attached?%>
+      <%=image_tag @company.cover, class: "company-card__image"%>
+    <%end%>
+ 
+    <div class="game-card__content">
+     <div class = "flex space_between" >
+        <p class="content-lg mb-1 gray-400"><%= @company.name%></p>
+      </div>
+      <p class="mb-4 content-xs gray-300"><%= "#{@company.start_date.year} - #{@company.country}"%></p>
+    </div>
+    <div class = "flex space_evenly mb-4">
+      <div class = "window">
+        <%= link_to  "Company Details", company_path(@company), class: "black" %>
+      </div>
+      <div class = "window-open">
+        <%= link_to  "Critics (#{@company.critics.where("approve=?",true).count})", company_critics_path(@company), class: "black" %>
+      </div>
+    </div>
+
+    <%= render "form", {critic: @critic, criticable: @company}%>
+    <% if user_signed_in? %>
+      <% @critics.each do |critic| %>
+
+        <%= render "critic_card", critic: critic, model: @company, flag: @flag%>
+      <%end%>
+    <% else %>
+      <% @critics.each do |critic| %> 
+        <% if critic.approve %>
+          <hr class="line">
+          <div class="critic-card">
+            <h2 class=""><%= critic.title %></h2>
+            <p class="gray-300 mb-2"> <%= critic.user.username%> </p>
+            <p><%= critic.body %></p>
+            <div class="critic-destroy ">
+              <p class="gray-300 content-sm">Send <%=time_ago_in_words(critic.created_at)%></p>
+              <div class= "flex gap-4 items-center">
+                <% if user_signed_in? %>
+                  <% if current_user.username == critic.user.username || current_user.role == "admin"%>
+                    <%=link_to image_tag("edit.png"), edit_company_path(company)%>
+                    <%=link_to image_tag("delete.png"), critic_path(critic), data: { turbo_method: :delete, 
+                                                                          turbo_confirm: "Are you sure?" }%>
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+            <div>
+          </div>
+          
+        <% end %>
+      <% end %>
+    <% end %>
+      <%= link_to  "Back", companies_path, class: "button-back"%>
+  <% end %>
+  
+  </div>
+</section>

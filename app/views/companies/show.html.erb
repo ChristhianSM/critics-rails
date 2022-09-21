@@ -1,0 +1,34 @@
+<section class="section">
+  <div class="container">
+
+    <%if @company.cover.attached?%>
+      <%=image_tag @company.cover, class: "company-card__image"%>
+    <%end%>
+
+    <div class="company-card__content">
+      <div class = "flex space_between" >
+        <p class="content-lg mb-1 gray-400"><%= @company.name%></p>
+      </div>
+      <p class="mb-4 content-xs gray-300"><%= "#{@company.start_date.year} - #{@company.country}"%></p>
+    </div>
+    <div class = "flex space_evenly mb-4">
+      <div class = "window-open">
+        <%= link_to  "Company Details", company_path(@company), class: "black" %>
+      </div>
+      <div class = "window">
+        <%= link_to  "Critics (#{@company.critics.where("approve=?",true).count})", "#{@company.id}/critics", class: "black" %>
+      </div>
+    </div>
+
+    <p class = "text-center mb-4"><%= @company.description%></p>
+
+    <div class="card-list mb-4">
+      <% @company.games.each do |game|%>
+        <%= render "games/card_game", game: game %>
+      <%end%>
+    </div>
+
+      <%= link_to  "Back", companies_url, class: "button-back"%>
+    </div>
+  </div>
+</section>

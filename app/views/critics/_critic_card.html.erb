@@ -1,0 +1,63 @@
+<% if critic.approve%>
+  <hr class="line">
+  <div class="critic-card">
+      <h2 class=""><%= critic.title %></h2>
+      <p class="gray-300 mb-2"> <%= critic.user.username%> </p>
+      <p><%= critic.body %></p>
+      <div class="critic-destroy ">
+        <p class="gray-300 content-sm">Send <%=time_ago_in_words(critic.created_at)%></p>
+        <div class= "flex gap-4 items-center">
+          <% if user_signed_in? %>
+            <% if current_user.username == critic.user.username || current_user.role == "admin"%>
+              <%=link_to image_tag("delete.png"), critic_path(critic), data: { turbo_method: :delete, 
+                                                                    turbo_confirm: "Are you sure?" }%>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    <div>
+  </div>
+<% elsif  !critic.approve && critic.user.username == current_user.username %>
+  <hr class="line">
+  <div class="critic-card">
+    <h2 class=""><%= critic.title %></h2>
+    <p class="gray-300 mb-2"> <%= critic.user.username%> </p>
+    <p><%= critic.body %></p>
+    <div class="critic-destroy ">
+      <p class="gray-300 content-sm">Send <%=time_ago_in_words(critic.created_at)%></p>
+      <div class= "flex gap-4 items-center">
+        <span class="gray-300">Pending approval</span>
+        <% if user_signed_in? %>
+          <% if current_user.username == critic.user.username || current_user.role == "admin"%>
+            <%=link_to image_tag("edit.png"), edit_critic_path(critic, model_id: model.id, flag: flag)%>
+            <%=link_to image_tag("delete.png"), critic_path(critic), data: { turbo_method: :delete, 
+                                                                  turbo_confirm: "Are you sure?" }%>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+    <div>
+  </div>
+<% elsif current_user.role == "admin"%>
+  <hr class="line">
+  <div class="critic-card">
+    <h2 class=""><%= critic.title %></h2>
+    <p class="gray-300 mb-2"> <%= critic.user.username%> </p>
+    <p><%= critic.body %></p>
+    <div class="critic-destroy ">
+      <p class="gray-300 content-sm">Send <%=time_ago_in_words(critic.created_at)%></p>
+      <div class= "flex gap-4 items-center">
+        <%= link_to  "Approve", approve_critic_path(critic_id: critic.id), class: "primary-500" %>
+        <% if user_signed_in? %>
+          <% if current_user.username == critic.user.username || current_user.role == "admin"%>
+            <%=link_to image_tag("edit.png"), edit_critic_path(critic, model_id: model.id, flag: flag)%>
+            <%=link_to image_tag("delete.png"), critic_path(critic), data: { turbo_method: :delete, 
+                                                                  turbo_confirm: "Are you sure?" }%>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+    <div>
+  </div>
+   
+<% end %>

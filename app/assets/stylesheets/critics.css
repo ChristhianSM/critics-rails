@@ -1,0 +1,12 @@
+.critic-card {
+  padding: 0.5rem 0px 0px;
+}
+
+.line {
+  border: 2px solid #d3d3d3;
+  width: 100%;
+}
+
+.field-default {
+  display: none;
+}
